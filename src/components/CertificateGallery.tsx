@@ -79,13 +79,7 @@ function PdfModal({ item, onClose }: { item: CertificateItem; onClose: () => voi
 export function CertificateGallery() {
   const [query, setQuery] = useState("");
   const [active, setActive] = useState<CertificateItem | null>(null);
-  const [total, setTotal] = useState(0);
-
-  useEffect(() => {
-    setTotal(
-      certificateGroups.reduce((acc, g) => acc + g.items.length, 0)
-    );
-  }, []);
+  const total = certificateGroups.reduce((acc, g) => acc + g.items.length, 0);
 
   const groups = useMemo(() => {
     const q = query.trim().toLowerCase();
