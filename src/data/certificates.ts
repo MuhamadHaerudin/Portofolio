@@ -336,4 +336,4 @@ export const certificateGroups: CertificateGroup[] = [
   },
 ];
 
-export const certificateFileBase = "/sertifikat/";
+export const certificateFileBase = "/api/sertifikat/";

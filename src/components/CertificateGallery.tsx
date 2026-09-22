@@ -6,9 +6,10 @@ import {
   certificateFileBase,
   type CertificateItem,
 } from "@/data/certificates";
+import { PdfCanvasViewer } from "@/components/PdfCanvasViewer";
 
 function PdfModal({ item, onClose }: { item: CertificateItem; onClose: () => void }) {
-  const src = `${certificateFileBase}${item.file}`;
+  const src = `${certificateFileBase}${encodeURIComponent(item.file)}`;
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -26,50 +27,31 @@ function PdfModal({ item, onClose }: { item: CertificateItem; onClose: () => voi
     <div
       className="fixed inset-0 z-[80] flex items-center justify-center p-4 sm:p-8"
       onClick={onClose}
+      onContextMenu={(e) => e.preventDefault()}
     >
       <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" />
       <div
         className="glass relative flex h-full w-full max-w-5xl flex-col overflow-hidden rounded-3xl"
         onClick={(e) => e.stopPropagation()}
+        onDragStart={(e) => e.preventDefault()}
       >
         <div className="flex items-center justify-between gap-3 border-b border-white/10 p-4">
           <div className="min-w-0">
             <p className="truncate text-sm font-semibold text-white">{item.title}</p>
             <p className="font-mono text-xs text-zinc-500">
-              {item.year} · {item.file}
+              {item.year} · pratinjau-saja
             </p>
           </div>
-          <div className="flex shrink-0 items-center gap-2">
-            <a
-              href={src}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="rounded-full border border-white/15 px-3 py-1.5 text-xs font-semibold text-zinc-300 transition-colors hover:bg-white/10"
-            >
-              ↗ Buka
-            </a>
-            <a
-              href={src}
-              download
-              className="rounded-full border border-white/15 px-3 py-1.5 text-xs font-semibold text-zinc-300 transition-colors hover:bg-white/10"
-            >
-              ⬇ Unduh
-            </a>
-            <button
-              onClick={onClose}
-              aria-label="Tutup"
-              className="flex h-8 w-8 items-center justify-center rounded-full border border-white/15 text-sm text-zinc-300 transition-colors hover:bg-white/10"
-            >
-              ✕
-            </button>
-          </div>
+          <button
+            onClick={onClose}
+            aria-label="Tutup"
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-white/15 text-sm text-zinc-300 transition-colors hover:bg-white/10"
+          >
+            ✕
+          </button>
         </div>
         <div className="relative flex-1 bg-[#0a0a12]">
-          <iframe
-            src={src}
-            title={item.title}
-            className="absolute inset-0 h-full w-full border-0"
-          />
+          <PdfCanvasViewer src={src} title={item.title} />
         </div>
       </div>
     </div>
@@ -154,22 +136,12 @@ export function CertificateGallery() {
                 <h4 className="mt-2 line-clamp-3 text-sm font-semibold leading-snug text-zinc-100">
                   {item.title}
                 </h4>
-                <div className="mt-4 flex items-center gap-2">
-                  <button
-                    onClick={() => setActive(item)}
-                    className="flex-1 rounded-full bg-gradient-to-r from-blue-500 to-violet-500 px-3 py-1.5 text-xs font-semibold text-white transition-opacity hover:opacity-90"
-                  >
-                    📄 Lihat
-                  </button>
-                  <a
-                    href={`${certificateFileBase}${item.file}`}
-                    download
-                    title="Unduh PDF"
-                    className="flex h-7 w-7 items-center justify-center rounded-full border border-white/15 text-xs text-zinc-300 transition-colors hover:bg-white/10"
-                  >
-                    ⬇
-                  </a>
-                </div>
+                <button
+                  onClick={() => setActive(item)}
+                  className="mt-4 w-full rounded-full bg-gradient-to-r from-blue-500 to-violet-500 px-3 py-1.5 text-xs font-semibold text-white transition-opacity hover:opacity-90"
+                >
+                  📄 Lihat
+                </button>
               </div>
             ))}
           </div>
